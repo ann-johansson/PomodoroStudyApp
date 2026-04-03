@@ -13,6 +13,17 @@ namespace PomodoroWebAPI
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            // Configure CORS to allow requests from the React development server
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                {
+                    builder.WithOrigins("http://localhost:5173") // React development server URL
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,6 +41,8 @@ namespace PomodoroWebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowReactApp"); // Apply the CORS policy
 
             app.UseAuthorization();
 
